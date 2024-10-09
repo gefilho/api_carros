@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
@@ -25,10 +25,9 @@ public class Usuario {
     private String email;
 
     @NotBlank(message = "Senha é obrigatória")
-    @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
+    @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String senha;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
