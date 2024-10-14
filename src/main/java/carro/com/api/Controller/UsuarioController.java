@@ -3,6 +3,7 @@ package carro.com.api.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,5 +57,16 @@ public class UsuarioController {
         acao.deletar(id);
         return ResponseEntity.noContent().build();
     }
+    
+    //Teste Login
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> validarSenha(@RequestBody Usuario Usuario){        
+        Boolean valid = acao.validarSenha(Usuario);
+        if(!valid) {
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.status(200).build();
+    }
+    
 
 }
