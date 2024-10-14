@@ -15,7 +15,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
@@ -28,11 +28,11 @@ public class Usuario {
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String senha;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
