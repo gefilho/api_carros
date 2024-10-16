@@ -57,16 +57,5 @@ public class UsuarioController {
         acao.deletar(id);
         return ResponseEntity.noContent().build();
     }
-    
-    //Teste Login
-    @PostMapping("/login")
-    public ResponseEntity<Usuario> validarSenha(@RequestBody Usuario Usuario){        
-        Boolean valid = acao.validarSenha(Usuario);
-        if(!valid) {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.status(200).build();
-    }
-    
 
 }
