@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -19,6 +21,8 @@ public class SecurityConfiguration {
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+						.requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
 						.requestMatchers(HttpMethod.POST, "/carro/criar").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/carro/editar/{id}").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/carro/deletar/{id}").hasRole("ADMIN")
@@ -30,5 +34,10 @@ public class SecurityConfiguration {
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEnconder() {
+		return new BCryptPasswordEncoder();
 	}
 }
