@@ -4,27 +4,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import carro.com.api.Model.AuthenticationDTO;
+import carro.com.api.DTO.AuthenticationDTO;
+import carro.com.api.DTO.RegisterDTO;
+import carro.com.api.Model.Usuario;
+import carro.com.api.Repositorio.UsuarioRepository;
+import carro.com.api.Service.UsuarioService;
 import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
 	
+    @Autowired
+    private UsuarioRepository repositorio;
+    private UsuarioService acao;
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
-	@PostMapping("login")
+    
+	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-		var auth = this.authenticationManager.authenticate(usernamePassword);
-		
-		return ResponseEntity.ok().build();
+	    var emailSenha = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
+	    var auth = this.authenticationManager.authenticate(emailSenha);
+	    return ResponseEntity.ok().build();
 	}
+	
+	//Teste Registrar
+	@PostMapping("/registrar")
+    public ResponseEntity registrarUsuario(@RequestBody @Valid RegisterDTO data) {
+    	if(this.repositorio.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
+    	String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
+    	Usuario novoUsuario = new Usuario(data.nome(), data.email(), encryptedPassword, data.permissao());
+    	
+    	this.repositorio.save(novoUsuario);
+    	
+    	return ResponseEntity.ok().build();
+    }
 }

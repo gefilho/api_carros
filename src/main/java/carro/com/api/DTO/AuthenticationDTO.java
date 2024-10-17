@@ -1,3 +1,5 @@
-package carro.com.api.Model;
+package carro.com.api.DTO;
 
-public record AuthenticationDTO(String login, String password) {}
+public record AuthenticationDTO(String email, String senha) {
+
+}
