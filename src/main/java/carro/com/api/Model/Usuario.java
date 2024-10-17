@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import carro.com.api.Enums.UsuarioPermissao;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +37,16 @@ public class Usuario implements UserDetails {
     private String senha;
     
     private UsuarioPermissao permissao;
+    
+    public Usuario() {
+    }
+    
+    public Usuario(String nome, String email, String senha, UsuarioPermissao permissao) {
+    	this.nome = nome;
+    	this.email = email;
+    	this.senha = senha;
+    	this.permissao = permissao;
+    }
 
     public Integer getId() {
         return id;
