@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import carro.com.api.Model.Usuario;
@@ -15,6 +16,9 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository repositorio;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<Usuario> findAll() {
         return repositorio.findAll();
     }
@@ -24,9 +28,15 @@ public class UsuarioService {
     }
 
     public Usuario criar(Usuario Usuario) {
+        Usuario.setSenha(passwordEncoder.encode(Usuario.getSenha()));
         return repositorio.save(Usuario);
     }
 
+    /*public Admin criar(Admin admin) {
+        // Criptografa a senha antes de salvar
+        admin.setSenha(passwordEncoder.encode(admin.getSenha()));
+        return repositorio.save(admin);
+    }*/
     public Usuario atualizar(Integer id, Usuario UsuarioDetalhe) {
         Optional<Usuario> optionalUsuario = repositorio.findById(id);
         if (optionalUsuario.isPresent()) {
@@ -54,4 +64,4 @@ public class UsuarioService {
         }
     }
 
-    }
+}
