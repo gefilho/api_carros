@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import carro.com.api.Model.Usuario;
 import carro.com.api.Repositorio.UsuarioRepository;
@@ -63,16 +65,5 @@ public class UsuarioService {
             throw new RuntimeException("Usuario não encontrado com o ID: " + id);
         }
     }
-
-	public Boolean validarSenha(Usuario usuario) {
-	    Optional<Usuario> optionalUsuario = repositorio.findById(usuario.getId());
-	    if (optionalUsuario.isPresent()) {
-	        String senha = optionalUsuario.get().getSenha();
-	        Boolean valid = passwordEnconder.matches(usuario.getSenha(), senha);
-	        return valid;
-	    } else {
-	        return false;
-	    }
-	}
 
 }
