@@ -14,6 +14,7 @@ import carro.com.api.DTO.AuthenticationDTO;
 import carro.com.api.DTO.RegisterDTO;
 import carro.com.api.Model.Usuario;
 import carro.com.api.Repositorio.UsuarioRepository;
+import carro.com.api.Security.TokenService;
 import carro.com.api.Service.UsuarioService;
 import jakarta.validation.Valid;
 
@@ -23,7 +24,10 @@ public class AuthenticationController {
 	
     @Autowired
     private UsuarioRepository repositorio;
+    @Autowired
     private UsuarioService acao;
+    @Autowired
+    private TokenService tokenService;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -32,7 +36,10 @@ public class AuthenticationController {
 	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
 	    var emailSenha = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
 	    var auth = this.authenticationManager.authenticate(emailSenha);
-	    return ResponseEntity.ok().build();
+	    
+	    var token = tokenService.generateToken((Usuario) auth.getPrincipal());
+	    
+	    return ResponseEntity.ok(token);
 	}
 	
 	//Teste Registrar
