@@ -14,12 +14,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+
 @Configuration
 @EnableWebSecurity //Habilitação da config do Web Security
+@SecurityScheme(name = SecurityConfiguration.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfiguration {
 	
 	@Autowired
 	SecurityFilter securityFilter;
+	
+	public static final String SECURITY = "bearerAuth";
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -32,6 +38,7 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.POST, "/carro/criar").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/carro/editar/{id}").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/carro/deletar/{id}").hasRole("ADMIN")
+						.requestMatchers("/v3/api-docs/**", "swagger-ui/**", "swagger-ui.html").permitAll()
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)				
