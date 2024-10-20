@@ -26,13 +26,13 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/admin/criar").permitAll() // Libera o endpoint de criação de admin
-                .requestMatchers("/usuario/criar").permitAll() // Libera criação de usuários
-                .requestMatchers("/carro/listar").permitAll() // Libera listar carros
-                .requestMatchers("/carro/criar").hasRole("ADMIN") // Apenas ADMIN pode criar carro
-                .requestMatchers("/carro/editar/**").hasRole("ADMIN") // Apenas ADMIN pode editar carro
-                .requestMatchers("/carro/deletar/**").hasRole("ADMIN") // Apenas ADMIN pode deletar carro
-                .anyRequest().authenticated() // Outros endpoints precisam de autenticação
+                .requestMatchers("/admin/criar").permitAll() 
+                .requestMatchers("/usuario/criar").permitAll()
+                .requestMatchers("/carro/listar").permitAll() 
+                .requestMatchers("/carro/criar").hasRole("ADMIN")
+                .requestMatchers("/carro/editar/**").hasRole("ADMIN")
+                .requestMatchers("/carro/deletar/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
             )
             .httpBasic(); // Usando autenticação HTTP básica
 
