@@ -46,8 +46,11 @@ public class CarroRelatorioService {
             
         	String padrao = "###, ###. ##";
         	DecimalFormat df = new DecimalFormat(padrao);
-
+        	int count = 0;
+        	
             for (Carro carro : carros) {
+            	if (count >= 10) break;
+            	
             	PdfPCell nomeCell = new PdfPCell(new Paragraph(carro.getNome()));
                 nomeCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 nomeCell.setPadding(5);
@@ -78,6 +81,8 @@ public class CarroRelatorioService {
                 placaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 placaCell.setPadding(5);
                 table.addCell(placaCell);
+                
+                count++;
             }
 
             document.add(table);
