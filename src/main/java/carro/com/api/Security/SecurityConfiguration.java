@@ -28,7 +28,7 @@ public class SecurityConfiguration {
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-						.requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
+						.requestMatchers(HttpMethod.POST, "/usuario/registrar").permitAll()
 						.requestMatchers(HttpMethod.POST, "/carro/criar").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/carro/editar/{id}").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/carro/deletar/{id}").hasRole("ADMIN")
