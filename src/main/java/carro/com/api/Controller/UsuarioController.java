@@ -3,8 +3,8 @@ package carro.com.api.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import carro.com.api.DTO.RegisterDTO;
 import carro.com.api.Model.Usuario;
+import carro.com.api.Repositorio.UsuarioRepository;
 import carro.com.api.Security.SecurityConfiguration;
 import carro.com.api.Service.MockEmailService;
 import carro.com.api.Service.UsuarioService;
@@ -29,27 +31,36 @@ import jakarta.validation.Valid;
 @Tag(name = "Usuario", description = "Seção do usuario")
 @SecurityRequirement(name = SecurityConfiguration.SECURITY)
 public class UsuarioController {
+	
+    @Autowired
+    private UsuarioRepository repositorio;
 
     @Autowired
     private UsuarioService acao;
 
     @Autowired
     private MockEmailService email;
-
-    @PostMapping("/criar")
-    @Operation(summary = "Criar Usuarios", description = "Metodo fazer realizar a criação de usuarios")
-    @ApiResponse(responseCode = "201", description = "Usuario criado com sucesso!")
-    @ApiResponse(responseCode = "400", description = "Ocorreu um erro ao criar o usuario")
-    @ApiResponse(responseCode = "500", description = "Erro no servidor")
-    public ResponseEntity<Usuario> criar(@Valid @RequestBody Usuario Usuario) {
-        Usuario newUsuario = acao.criar(Usuario);
-
+    
+	@PostMapping("/registrar")
+	@Operation(summary = "Registrar Usuário", description = "Método para registrar um novo usuário no sistema")
+	@ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso!")
+	@ApiResponse(responseCode = "400", description = "Erro de validação ou dados incorretos fornecidos pelo usuário!")
+	@ApiResponse(responseCode = "409", description = "Usuário já existe!")
+	@ApiResponse(responseCode = "500", description = "Erro no servidor")
+    public ResponseEntity<Usuario> registrarUsuario(@RequestBody @Valid RegisterDTO data) {
+    	if(this.repositorio.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
+    	String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
+    	Usuario novoUsuario = new Usuario(data.nome(), data.email(), encryptedPassword, data.permissao());
+    	
+    	this.repositorio.save(novoUsuario);
+    	
         email.enviarEmail(
-                Usuario.getEmail(),
+                data.email(),
                 "Cadastro Realizado",
-                "Olá " + Usuario.getNome() + ", seu cadastro foi realizado com sucesso!"
+                "Olá " + data.nome() + ", seu cadastro foi realizado com sucesso!"
         );
-        return ResponseEntity.ok(newUsuario);
+    	
+    	return ResponseEntity.ok().build();
     }
 
     @GetMapping("/listar")
