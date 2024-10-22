@@ -3,6 +3,8 @@ import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -16,6 +18,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import carro.com.api.Model.Carro;
 
+@Service
 public class CarroRelatorioService {
 
     public void gerarRelatorioPdf(List<Carro> carros, OutputStream outputStream) {

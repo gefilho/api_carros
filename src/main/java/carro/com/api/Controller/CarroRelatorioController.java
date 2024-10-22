@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import carro.com.api.Model.Carro;
+import carro.com.api.Security.SecurityConfiguration;
 import carro.com.api.Service.CarroRelatorioService;
 import carro.com.api.Service.CarroService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,6 +22,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/relatorios")
+@Tag(name = "Relatorio", description = "Seção de Relatorio")
+@SecurityRequirement(name = SecurityConfiguration.SECURITY)
 public class CarroRelatorioController {
 	
     @Autowired
