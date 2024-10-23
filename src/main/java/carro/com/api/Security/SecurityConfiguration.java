@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 @SecurityScheme(name = SecurityConfiguration.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfiguration {
 
+
     @Autowired
     SecurityFilter securityFilter;
 
@@ -56,4 +57,5 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEnconder() {
         return new BCryptPasswordEncoder();
     }
+
 }
