@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import carro.com.api.DTO.CarroResumoDTO;
 import carro.com.api.Model.Carro;
 import carro.com.api.Repositorio.CarroRepository;
 
@@ -47,4 +48,23 @@ public class CarroService {
             throw new RuntimeException("Carro não encontrado com id: " + id);
         }
     }
+
+    public CarroResumoDTO resumoID(Integer id) {
+        // Buscar o carro pelo ID no repositório
+        Optional<Carro> carroOptional = repositorio.findById(id);
+        if (carroOptional.isPresent()) {
+            Carro carro = carroOptional.get();
+            // Criar e retornar o DTO com os dados do carro
+            return new CarroResumoDTO(
+                carro.getId(),
+                carro.getNome(),
+                carro.getPreco(),
+                carro.getAno(),
+                carro.getMarca()
+            );
+        } else {
+            throw new RuntimeException("Carro não encontrado com id: " + id);
+        }
+    }
+    
 }
