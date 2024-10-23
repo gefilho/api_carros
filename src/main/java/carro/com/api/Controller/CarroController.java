@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import carro.com.api.DTO.CarroResumoDTO;
 import carro.com.api.Model.Carro;
 import carro.com.api.Security.SecurityConfiguration;
 import carro.com.api.Service.CarroService;
@@ -71,5 +72,24 @@ public class CarroController {
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         acao.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/resumoCarro/{id}")
+    @Operation(summary = "Resumo Carro", description = "Método para listar um carro do sistema")
+    @ApiResponse(responseCode = "200", description = "Carro listado com sucesso!")
+    @ApiResponse(responseCode = "400", description = "ID fornecido inválido!")
+    @ApiResponse(responseCode = "404", description = "Carro não encontrado!")
+    @ApiResponse(responseCode = "500", description = "Erro no servidor")
+    public CarroResumoDTO resumoID(@PathVariable Integer id){
+        return acao.resumoID(id);
+    }
+    
+    @GetMapping("/resumoCarro")
+    @Operation(summary = "Resumo Carro", description = "Método para listar um conjunto de carros do sistema")
+    @ApiResponse(responseCode = "200", description = "Carros listados com sucesso!")
+    @ApiResponse(responseCode = "400", description = "Ocorreu um erro por parte do usuário!")
+    @ApiResponse(responseCode = "500", description = "Erro no servidor")
+    public List<CarroResumoDTO> resumo() {
+        return acao.resumo();
     }
 }
