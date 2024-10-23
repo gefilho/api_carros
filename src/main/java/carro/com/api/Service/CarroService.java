@@ -2,10 +2,12 @@ package carro.com.api.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import carro.com.api.DTO.CarroResumoDTO;
 import carro.com.api.Model.Carro;
 import carro.com.api.Repositorio.CarroRepository;
 
@@ -47,4 +49,27 @@ public class CarroService {
             throw new RuntimeException("Carro não encontrado com id: " + id);
         }
     }
+    
+    public CarroResumoDTO resumoID(int id){
+        Optional<Carro> carroOptional = repositorio.findById(id);
+        if (carroOptional.isPresent()) {
+        	Carro carro = carroOptional.get();
+            return new CarroResumoDTO(carro.getId(), carro.getNome(), carro.getPreco(), carro.getAno(), carro.getMarca());
+        } else {
+            throw new RuntimeException("Carro não encontrado com id: " + id);
+        }
+    }
+    
+    public List<CarroResumoDTO> resumo() {
+        List<Carro> carros = repositorio.findAll();
+        return carros.stream()
+                .map(carro -> new CarroResumoDTO(
+                	carro.getId(),
+                    carro.getNome(), 
+                    carro.getPreco(), 
+                    carro.getAno(), 
+                    carro.getMarca()))
+                .collect(Collectors.toList());
+    }
+
 }
