@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import carro.com.api.DTO.RegisterDTO;
 import carro.com.api.Model.Usuario;
-import carro.com.api.Repositorio.UsuarioRepository;
 import carro.com.api.Security.SecurityConfiguration;
-import carro.com.api.Service.MockEmailService;
 import carro.com.api.Service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,14 +29,10 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = SecurityConfiguration.SECURITY)
 public class UsuarioController {
 	
-    @Autowired
-    private UsuarioRepository repositorio;
 
     @Autowired
     private UsuarioService acao;
 
-    @Autowired
-    private MockEmailService email;
     
 	@PostMapping("/registrar")
 	@Operation(summary = "Registrar Usuário", description = "Método para registrar um novo usuário no sistema")
@@ -47,20 +40,8 @@ public class UsuarioController {
 	@ApiResponse(responseCode = "400", description = "Erro de validação ou dados incorretos fornecidos pelo usuário!")
 	@ApiResponse(responseCode = "409", description = "Usuário já existe!")
 	@ApiResponse(responseCode = "500", description = "Erro no servidor")
-    public ResponseEntity<Usuario> registrarUsuario(@RequestBody @Valid RegisterDTO data) {
-    	if(this.repositorio.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
-    	String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
-    	Usuario novoUsuario = new Usuario(data.nome(), data.email(), encryptedPassword, data.permissao());
-    	
-    	this.repositorio.save(novoUsuario);
-    	
-        email.enviarEmail(
-                data.email(),
-                "Cadastro Realizado",
-                "Olá " + data.nome() + ", seu cadastro foi realizado com sucesso!"
-        );
-    	
-    	return ResponseEntity.ok().build();
+    public ResponseEntity<String> registrarUsuario(@RequestBody @Valid RegisterDTO data) {
+        return acao.registrarUsuario(data);
     }
 
     @GetMapping("/listar")
@@ -78,8 +59,8 @@ public class UsuarioController {
     @ApiResponse(responseCode = "400", description = "Ocorreu um erro por parte do usuário!")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado!")
     @ApiResponse(responseCode = "500", description = "Erro no servidor")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id, @Valid @RequestBody Usuario UsuarioDetalhe) {
-        Usuario updatedUsuario = acao.atualizar(id, UsuarioDetalhe);
+    public ResponseEntity<?> atualizarUsuario(@PathVariable Integer id, @Valid @RequestBody Usuario UsuarioDetalhe) {
+        ResponseEntity<?> updatedUsuario = acao.atualizar(id, UsuarioDetalhe);
         return ResponseEntity.ok(updatedUsuario);
     }
 
