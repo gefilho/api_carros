@@ -40,6 +40,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/carro/editar/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/carro/deletar/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/QrCode/CarroQrCode/{id}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/relatorios/carros/download").hasRole("ADMIN")
+
                 .requestMatchers("/v3/api-docs/**", "swagger-ui/**", "swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 )
